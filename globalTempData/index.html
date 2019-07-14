@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tabular Data from CSV file and Graphing</title>
+<script src="Chart.min.js"></script>
+</head>
+
+<body>
+  <h1>Tabular Data from CSV file and Graphing</h1>
+  <!-- Data Sourced from: data.giss.nasa.gov/gistemp -->
+  <canvas id="chart" width="800" height="400"></canvas>
+
+<script>
+drawChart()
+
+async function drawChart () {
+  const data = await getData()
+  await getData()
+  const ctx = document.getElementById('chart').getContext('2d');
+  const chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+          labels: data.xlabels,
+          datasets: [{
+              label: 'Combined Land-Surface Air and Sea-Surface Water Temperature in C°',
+              data: data.ytemps,
+              fill: false,
+              backgroundColor: 'rgba(255, 99, 132, 0.2)',
+              borderColor: 'rgba(255, 99, 132, 1)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      callback: function(value, index, values) {
+                          return value + '°';
+                      }
+                  }
+              }]
+          }
+        }
+      });
+    }
+
+async function getData() {
+  const xlabels = []
+  const ytemps = []
+  const response = await fetch('tempData.csv')
+  const data = await response.text()
+  const rows = data.split('\n').slice(1)
+  rows.forEach(element => {
+    const row = element.split(',')
+    const year = row[0]
+    xlabels.push(year)
+    const temp = row[1]
+    ytemps.push(parseFloat(temp) + 14)
+    console.log(year, temp)
+  })
+  return { xlabels, ytemps}
+}
+</script>
+</body>
+</html>
