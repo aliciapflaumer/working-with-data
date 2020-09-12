@@ -10,6 +10,6 @@
   "license": "ISC",
   "dependencies": {
     "chart.js": "^2.8.0",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.1"
   }
 }
